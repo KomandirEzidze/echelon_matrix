@@ -6,6 +6,7 @@ using namespace std;
 
 void grad_matrix(ifstream &file, ofstream &file_result);
 int** new_matrix(int n, int m, ifstream &file);
+int** transpose(int n, int m, int** matrix);
 
 int main(int argc, char *argv[])
 {
@@ -41,10 +42,8 @@ int** new_matrix(int n, int m, ifstream &file) {
     matrix[i] = new int[m];
     for (int j=0;j<m;j++,file >> data) {
       matrix[i][j] = atoi(data);
-      cout << matrix[i][j] << " ";
     }
   }
-  cout << endl;
 
   return matrix;
 }
@@ -61,12 +60,39 @@ void grad_matrix(ifstream &file, ofstream &file_result) {
 
   int** matrix = new_matrix(n, m, file);
 
-  for (int i=0;i<n;i++) {
-    for (int j=0;j<m;j++) {
-      cout << matrix[i][j] << "  ";
-    }
-    cout << endl;
+  // for (int i=0;i<n;i++) {
+  //   for (int j=0;j<m;j++) {
+  //     cout << matrix[i][j] << "  ";
+  //   }
+  //   cout << endl;
+  // }
+
+  if (n>m) {
+    matrix = transpose(n, m, matrix);
+    int t = n;
+    n = m;
+    m = t;
   }
 
-  
+  for (int col=0, elem=1;col<n;col++) {
+    if (elem > m) { break; }
+  }
+}
+
+int** transpose(int n, int m, int** matrix) {
+  int** trans_matrix = new int*[m];
+
+  for (int i=0;i<m;i++) {
+    trans_matrix[i] = new int[n];
+    for (int j=0;j<n;j++) {
+      trans_matrix[i][j] = matrix[j][i];
+    }
+  }
+
+  for (int i=0;i<n;i++) {
+    delete matrix[i];
+  }
+  delete matrix;
+
+  return trans_matrix;
 }
